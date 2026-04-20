@@ -1,0 +1,37 @@
+# Python cache
+
+**pycache**/
+*.py[cod]
+
+# Virtual environment
+
+venv/
+.venv/
+env/
+
+# Environment variables (secrets)
+
+.env
+
+# Logs
+
+*.log
+
+# Build / packaging
+
+dist/
+build/
+*.egg-info/
+
+# Database (local)
+
+*.sqlite3
+*.db
+
+# IDE
+
+.vscode/
+.idea/
+
+
+
