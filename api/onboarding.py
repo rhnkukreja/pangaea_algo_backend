@@ -109,6 +109,7 @@ def create_presigned_upload(payload: PresignRequest, user=Depends(verify_bearer_
 
 @router.get("/me")
 def get_my_onboarding_state(user=Depends(verify_bearer_token)):
+    print(f"\n--- DEBUG: Searching for auth_user_id: {user['id']} ---\n")
     # FIXED: Removed .maybe_single() to prevent AttributeError on 0 rows
     profile_response = (
         supabase.table("developers")
