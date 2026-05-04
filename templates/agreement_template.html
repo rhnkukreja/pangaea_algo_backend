@@ -1,174 +1,374 @@
-<div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; line-height: 1.6; color: #1f2937; padding: 40px;">
-    
-    <div style="text-align: center; margin-bottom: 40px;">
-        <h1 style="margin: 0; font-size: 28px; letter-spacing: 2px; text-transform: uppercase;">{{ company_name }}</h1>
-        <h2 style="margin-top: 10px; font-size: 20px; text-decoration: underline;">AGREEMENT</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pangaea — Developer Onboarding Terms & Conditions</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: hsl(var(--foreground, 0 0% 5%));
+      background: hsl(var(--background, 0 0% 98%));
+      padding: 60px 40px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    .doc-header {
+      text-align: center;
+      margin-bottom: 36px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid hsl(var(--foreground, 0 0% 5%));
+    }
+    .doc-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .doc-header .version {
+      font-size: 13px;
+      color: hsl(var(--muted-foreground, 0 0% 40%));
+      font-style: italic;
+    }
+
+    /* ── Section headings ── */
+    .section {
+      margin-bottom: 28px;
+    }
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid hsl(var(--border, 0 0% 82%));
+      color: hsl(var(--foreground, 0 0% 5%));
+    }
+
+    /* ── Body text ── */
+    p {
+      margin-bottom: 10px;
+      color: hsl(var(--foreground, 0 0% 5%));
+    }
+
+    /* ── Lists ── */
+    ul {
+      margin: 8px 0 12px 22px;
+      padding: 0;
+    }
+    ul li {
+      margin-bottom: 5px;
+      color: hsl(var(--foreground, 0 0% 5%));
+    }
+
+    /* ── Acceptance box ── */
+    .acceptance {
+      margin-top: 40px;
+      border: 1px solid hsl(var(--border, 0 0% 82%));
+      border-radius: 6px;
+      padding: 24px 28px;
+      background: hsl(var(--card, 0 0% 100%));
+    }
+    .acceptance h2 {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 18px;
+      color: hsl(var(--foreground, 0 0% 5%));
+      border-bottom: 1px solid hsl(var(--border, 0 0% 82%));
+      padding-bottom: 8px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .checkbox-item span { font-size: 13.5px; }
+
+    /* ── Signature block ── */
+    .signature-block {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .sig-field {
+      margin-bottom: 18px;
+    }
+    .sig-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: hsl(var(--muted-foreground, 0 0% 40%));
+      margin-bottom: 4px;
+    }
+    .sig-field .line {
+      border-bottom: 1px solid hsl(var(--border, 0 0% 82%));
+      min-height: 28px;
+      width: 100%;
+    }
+
+    /* ── Footer note ── */
+    .footer-note {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid hsl(var(--border, 0 0% 82%));
+      font-size: 12px;
+      color: hsl(var(--muted-foreground, 0 0% 40%));
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="doc-header">
+    <h1>{{ platform_name }} — Developer Onboarding Terms &amp; Conditions</h1>
+<div class="version">Version {{ version }}</div>
+  </div>
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-title">1. Purpose</div>
+    <p>These Terms govern the operational framework under which Pangaea ("Platform") represents and distributes the Developer's project(s) through its network.</p>
+    <p>These Terms establish a baseline understanding and do not replace transaction-specific commercial agreements or separately executed developer documents.</p>
+  </div>
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-title">2. Permission to Represent &amp; Distribute</div>
+    <p>The Developer permits Pangaea to:</p>
+    <ul>
+      <li>present and discuss the project with potential clients</li>
+      <li>share project materials within its network</li>
+      <li>include the project within its platform, tools, and advisory outputs</li>
+    </ul>
+    <p>This permission is limited to facilitating evaluation and transactions.</p>
+  </div>
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-title">3. Intellectual Property &amp; Brand Usage</div>
+    <p>The Developer grants Pangaea a non-exclusive, revocable right to use project-related branding and materials solely for representation and promotion.</p>
+    <p>All intellectual property remains with the Developer.</p>
+  </div>
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-title">4. Accuracy &amp; Responsibility of Information</div>
+    <p>The Developer confirms that:</p>
+    <ul>
+      <li>all information shared is accurate and not misleading</li>
+      <li>required approvals, registrations, and compliances are in place</li>
+      <li>material updates will be communicated promptly</li>
+    </ul>
+    <p>Pangaea relies on this information and does not independently verify it. Responsibility remains solely with the Developer.</p>
+  </div>
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-title">5. Use &amp; Distribution of Information</div>
+    <p>Pangaea may share project information with:</p>
+    <ul>
+      <li>its internal team</li>
+      <li>associated advisors and intermediaries</li>
+      <li>potential clients</li>
+    </ul>
+    <p>Strictly for transaction facilitation within its network.</p>
+  </div>
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-title">6. Non-Exclusive Engagement</div>
+    <p>The Developer acknowledges that:</p>
+    <ul>
+      <li>Pangaea is a non-exclusive distribution channel</li>
+      <li>the Developer may engage other partners independently</li>
+    </ul>
+  </div>
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-title">7. Client Introduction &amp; Attribution</div>
+    <ul>
+      <li>Clients introduced by Pangaea will be formally registered and shared with the Developer.</li>
+      <li>For such registered clients, Pangaea will be recognised as the originating channel.</li>
+      <li>Attribution applies only to clients introduced and acknowledged through this process.</li>
+    </ul>
+  </div>
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-title">8. Client Registration &amp; Validity</div>
+    <p>Client registration, format, and validation shall be governed in accordance with the separately executed developer document / registration protocol agreed between the Developer and Pangaea.</p>
+    <p>Only clients registered in accordance with that process shall qualify for attribution and commercial consideration.</p>
+  </div>
+
+  <!-- 9 -->
+  <div class="section">
+    <div class="section-title">9. Commercial Understanding</div>
+    <p>Commission structures, payment timelines, and related commercial terms shall be governed by the separately executed commercial document or agreement signed between the Developer and Pangaea.</p>
+    <p>Where required, transaction-specific terms may also be confirmed via email or deal-level documentation.</p>
+  </div>
+
+  <!-- 10 -->
+  <div class="section">
+    <div class="section-title">10. Expected Routing of Introduced Clients</div>
+    <p>Clients introduced through Pangaea are expected to be routed through the Pangaea channel for the relevant transaction, ensuring clarity of attribution and commercial alignment.</p>
+  </div>
+
+  <!-- 11 -->
+  <div class="section">
+    <div class="section-title">11. Platform Model Acknowledgement</div>
+    <p>The Developer acknowledges that:</p>
+    <ul>
+      <li>Pangaea operates through a network of advisors and intermediaries</li>
+      <li>project information may be shared within this network to enable distribution and deal flow</li>
+    </ul>
+  </div>
+
+  <!-- 12 -->
+  <div class="section">
+    <div class="section-title">12. Role &amp; Limitation of Pangaea</div>
+    <p>Pangaea acts solely as an advisory and distribution platform and does not guarantee:</p>
+    <ul>
+      <li>transaction outcomes</li>
+      <li>timelines</li>
+      <li>investment performance</li>
+    </ul>
+  </div>
+
+  <!-- 13 -->
+  <div class="section">
+    <div class="section-title">13. Developer Responsibility</div>
+    <p>The Developer remains solely responsible for:</p>
+    <ul>
+      <li>project execution and delivery</li>
+      <li>regulatory compliance</li>
+      <li>obligations to end buyers</li>
+    </ul>
+  </div>
+
+  <!-- 14 -->
+  <div class="section">
+    <div class="section-title">14. Confidentiality</div>
+    <p>Both parties agree to maintain confidentiality of non-public information shared during engagement, for the purpose of facilitating transactions.</p>
+  </div>
+
+  <!-- 15 -->
+  <div class="section">
+    <div class="section-title">15. Term &amp; Continuity</div>
+    <p>These Terms remain in effect until discontinued by either party.</p>
+    <p>Attribution and commercial understanding for clients already introduced prior to discontinuation shall continue to apply.</p>
+  </div>
+
+  <!-- 16 -->
+  <div class="section">
+    <div class="section-title">16. Nature of Terms</div>
+    <p>These Terms:</p>
+    <ul>
+      <li>establish operational clarity</li>
+      <li>do not constitute a comprehensive legal agreement</li>
+      <li>operate alongside any separately executed developer or commercial documents</li>
+    </ul>
+    <p>In the event of any inconsistency, the separately executed commercial or developer-specific document shall govern the relevant subject matter.</p>
+  </div>
+
+  <!-- Acceptance -->
+  <div class="acceptance">
+    <h2>Acceptance</h2>
+
+    {% for item in acceptance_items %}
+    <div class="checkbox-item">
+      <input
+          type="checkbox"
+          id="check-{{ loop.index }}"
+          style="
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            margin-top: 3px;
+            cursor: pointer;
+            accent-color: hsl(var(--foreground, 0 0% 5%));
+          "
+        />
+      <label
+        for="check-{{ loop.index }}"
+        style="font-size: 13.5px; color: hsl(var(--foreground, 0 0% 5%)); cursor: pointer;"
+      >
+        {{ item }}
+      </label>
+    </div>
+    {% endfor %}
+
+    <div class="signature-block" style="margin-top: 30px;">
+      <div>
+        <div class="sig-field">
+          <label>Authorised Representative Name</label>
+          <div class="line">{{ representative_name }}</div>
+        </div>
+        <div class="sig-field">
+          <label>Designation</label>
+          <div class="line" style="padding-top: 4px; min-height: 28px;">
+            {{ designation if designation else "" }}
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sig-field">
+          <label>Developer / Company</label>
+          <div class="line">{{ company_name }}</div>
+        </div>
+        <div class="sig-field">
+          <label>Date</label>
+          <div class="line" style="padding-top: 4px; min-height: 28px;">
+            {{ date if date else "" }}
+          </div>
+        </div>
+      </div>
     </div>
 
-    <p><strong>The parties:</strong></p>
-
-    <p>
-        <span style="text-transform: uppercase; font-weight: bold;">PANGEEA REALTY 44 PVT. LTD. </span>,
-        having its head office and principal place of business at 14198 Block 14 Parking Floor Subhash Nagar, New Delhi, India 110027,<br>
-        registered under the number CIN U68200DL2025PTCA50771, duly represented for the present Agreement by <strong>Ridhima Sabharwal</strong> (hereinafter the "Introducer"),
-    </p>
-
-    <p><strong>And</strong></p>
-
-    <p>
-        <strong>{{ company_name }}</strong>, having its head office and principal place of business at {{ company_address }}, registered under the number {{ registration_number }}, duly represented for the purposes hereof by <strong>{{ representative_name }}</strong>, hereinafter the "Developer".
-    </p>
-
-    <p><em>each a "Party" and together referred to as "Parties".</em></p>
-
-    <h3 style="margin-top: 30px;">Whereas,</h3>
-    <p>A. The Introducer is an international service provider specialized in residence and citizenship-by-investment programs and related services assisting individuals and their families in acquiring alternative residence or citizenship solutions;</p>
-    <p>B. The Developer is part of a group of leading companies in the hospitality and investment sectors, engaged in consulting, management, and real estate development projects that enable nationals of third countries to obtain residence authorization through qualifying investments under the applicable legal frameworks.</p>
-    <p>C. The Parties wish to enter into this Agreement, which sets out the terms and conditions governing their cooperation.</p>
-
-    <h3 style="margin-top: 30px; text-decoration: underline;">PART 1 - DEFINITIONS</h3>
-    <p><strong>"Agreement"</strong> means this Agreement, including all its Parts, and any amendments made in writing between the Parties.</p>
-    <p><strong>"Business Days"</strong> means any day other than a Saturday, Sunday, or public holiday on which banks are generally open for business.</p>
-    <p><strong>"Closed Subscription"</strong> means the completion of a qualifying investment through a subscription in an eligible investment structure, confirmed in writing by the relevant depositary bank or other competent entity in accordance with the applicable Program documentation.</p>
-    <p><strong>"Confidential Information"</strong> means all non-public information or data (including personal data) disclosed by one Party to the other in connection with this Agreement, in any form, including business, financial, client, or proprietary information.</p>
-    <p><strong>"Engagement"</strong> means, in respect of a given Program, the event identified as the "Engagement" trigger in the relevant Schedule.</p>
-    <p><strong>"Program"</strong> means any residence-by-investment program operated or promoted by the Developer.</p>
-    <p><strong>"KYC File"</strong> means the documentation used to verify the identity, origin of funds, and risk profile of a Prospective Client, in accordance with applicable AML/CTF laws.</p>
-    <p><strong>"Developer Group"</strong> means any company or entity that is directly or indirectly controlled by, under common control with, or controlling the Developer, including any affiliate, parent, or subsidiary companies engaged in investment migration, real estate development, project management, hospitality, or related services.</p>
-    <p><strong>"Notarial Deed"</strong> means any notarial deed, public deed, escritura pública, or equivalent instrument executed before a competent public notary or authority in the relevant jurisdiction, evidencing the completion of the qualifying investment.</p>
-    <p><strong>"Product"</strong> means any investment, residency, or citizenship-by-investment solution developed, promoted, or made available by the Developer Group, whether alone or in collaboration with Relevant Third Parties.</p>
-    <p><strong>"Prospective Client"</strong> means any individual (and, where applicable, family members) introduced by the Introducer to the Developer or any Developer Group entity in connection with a Program.</p>
-    <p><strong>"Prospective Client Registration"</strong> means the Developer's formal acknowledgment of a Prospective Client introduced by the Introducer upon submission and validation of the required documentation.</p>
-    <p><strong>"Fees"</strong> means the Fees payable by the Developer to the Introducer, calculated as a percentage of the total investment completed in a Transaction.</p>
-    <p><strong>"Registration Period"</strong> means, in respect of a given Program, the period (and any related rules on when registration becomes effective) set out in the relevant Schedule.</p>
-    <p><strong>"Relevant Third Parties"</strong> means any third party involved in, connected with, or required for the structuring, promotion, execution, or implementation of a Program or Product.</p>
-    <p><strong>"Transaction"</strong> means, in respect of a given Program, the successful completion of the qualifying investment by a Prospective Client, as determined in accordance with the applicable Engagement and completion event set out in the relevant Schedule of Part 3.</p>
-
-    <h3 style="margin-top: 30px; text-decoration: underline;">PART 2 - GENERAL CONDITIONS</h3>
-    
-    <p><strong>1. Scope</strong></p>
-    <p>1.1. This Agreement sets out the general terms and conditions governing the non-exclusive cooperation between the Developer and the Introducer in relation to the introduction of Prospective Clients to the Developer.</p>
-    <p>1.2. This Agreement constitutes a master framework agreement only. No rights, obligations, exclusivity or entitlement to any Fees shall arise unless and until the Parties have duly executed a Schedule in respect of a specific Program and no Program shall be deemed within scope unless expressly identified in an executed Schedule.</p>
-    <p>1.3. Each Schedule shall operate separately and independently and shall apply exclusively to the Program expressly identified therein. Each Schedule shall define, inter alia, the applicable Engagement trigger, Transaction trigger, Registration Period and Fees.</p>
-    <p>1.4. In the absence of a duly executed Schedule for a given Program, the Introducer shall have no entitlement to any Fees, compensation or consideration in respect of that Program, and the Developer shall have no obligation of any kind toward the Introducer in relation thereto.</p>
-
-    <p><strong>2. Term and Termination</strong></p>
-    <p>2.1. This Agreement shall enter into force on the date of its execution and shall remain in effect until terminated in accordance with this Clause 2.</p>
-    <p>2.2. The Developer may terminate any executed Schedule (and therefore the cooperation) in respect of a specific Program at any time by written notice to the Introducer, including where such Program (or any product offered thereunder) is discontinued or becomes inapplicable. Any such termination shall not affect: (a) the validity of this Agreement in respect of any other Program governed by an executed Schedule; or (b) any accrued rights or obligations arising prior to the effective date of termination. Termination of a Schedule shall be effective upon receipt of the notice (or such later date as stated therein).</p>
-    <p>2.3. Either Party may terminate this Agreement at any time by giving 30 days prior written notice to the other Party.</p>
-    <p>2.4. Termination or expiry of this Agreement shall not affect any provision which by its nature is intended to survive, including those on Confidentiality, Data Protection, Liability, and Indemnification any rights accrued up to the effective termination date, including the Introducer's right to the Fees for Transactions concluded within the Registration Period, provided that such termination did not result from the Introducer's breach.</p>
-    <p>2.5. Any outstanding obligations of the Introducer to refund Fees or commissions as stipulated in this Agreement shall survive termination and remain enforceable.</p>
-    <p>2.6. Following the termination of this Agreement, the Introducer agrees not to make any statements, whether written or oral, that may disparage or negatively affect the reputation or business interests of the Developer.</p>
-
-    <p><strong>3. Representations and Warranties of the Introducer</strong></p>
-    <p>3.1. The Introducer agrees to introduce Prospective Clients to the Developer.</p>
-    <p>3.2. The Introducer shall promote and explain the relevant Program(s) strictly within the scope of this Agreement, without providing financial, investment, tax, real estate, or legal advice to any Prospective Client or third party.</p>
-    <p>3.3. The Introducer shall conduct due diligence on each Prospective Client, verifying documentation, reliability, and compliance with AML and KYC requirements applicable to the Introducer.</p>
-    <p>3.4. The Introducer shall not act in the name of, or on behalf of, the Developer or any Relevant Third Party, nor have any authority to bind, commit, or make representations on their behalf. The Introducer acts solely as an independent contractor, and nothing herein shall be construed as creating a partnership, joint venture, agency, employment, fiduciary, or similar relationship between the Parties.</p>
-    <p>3.5. The Introducer acknowledges that the products and/or services promoted under this Agreement may constitute regulated activities and/or financial or investment-related offerings. The Introducer agrees to comply with all applicable legal and regulatory requirements.</p>
-    <p>3.6. The Introducer agrees to comply with all applicable local, national, and international laws, regulations, and standards in performing its duties under this Agreement.</p>
-    <p>3.7. The Introducer acknowledges that the implementation of a Program or Product may involve one or more Relevant Third Parties that are independent from the Developer. The Developer does not act as agent, representative, partner, or guarantor of any Relevant Third Party.</p>
-
-    <p><strong>4. Representations and Warranties of the Developer</strong></p>
-    <p>4.1. The Developer shall provide the Introducer with relevant information and promotional materials concerning the Product ("Materials"). The Introducer shall not modify, alter, or amend the Materials in any way.</p>
-    <p>4.2. The Developer shall have no responsibility or liability for any other materials used by the Introducer that are not provided or expressly approved by the Developer.</p>
-    <p>4.3. The Developer undertakes, during the term of this Agreement: i) to perform its obligations with due care, diligence, and good faith; ii) to comply fully with all obligations assumed under this Agreement; iii) evaluate the qualifications of each Prospective Client referred by the Introducer; iv) Upon receipt of the required documentation, examine the materials submitted by the Introducer; and v) notify the introducer if the materials submitted are incomplete or unsatisfactory.</p>
-
-    <p><strong>5. Registration</strong></p>
-    <p>5.1. To request the registration of a Prospective Client, the Introducer shall submit to the Developer accurate and complete information reasonably required to identify the Prospective Client, including the Prospective Client's full name, passport number, nationality, country of residence, email, and the required supporting documentation (KYC File and valid passport).</p>
-    <p>5.2. A Prospective Client shall be deemed registered only upon the Developer's express written confirmation.</p>
-    <p>5.4. If a Prospective Client has already been registered by the Developer or another introducer, the Developer may reject the submission by notice to the Introducer.</p>
-    <p>5.5. The Developer may cancel a registration at any time, without compensation, if (a) the information submitted by the Introducer is incomplete, inaccurate, false, or misleading; (b) the Prospective Client notifies the Developer that it does not wish to proceed through the Introducer; (c) the Introducer fails to maintain active and reasonable communication with the Prospective Client following the Developer's written request.</p>
-    <p>5.6. No Fees, compensation, or other payment shall be due to the Introducer in respect of any registration that is cancelled, rejected, or deemed invalid under this Clause 5.</p>
-    <p>5.9. The Developer reserves the right to withhold any payments due to the Introducer if the Introducer is found to be in breach of this Agreement.</p>
-
-    <p><strong>6. Fees and Payments</strong></p>
-    <p>6.1. The Developer hereby agrees to pay the Introducer the Fees as indicated in the relevant Schedule applicable to the relevant Program.</p>
-    <p>6.2. Upon completion of an Engagement, the Developer shall pay the Fees due in respect of each Prospective Client within thirty (30) days of receipt of the corresponding invoice, to the Introducer's designated account.</p>
-    <p>6.4. Where, pursuant to the terms of the agreements entered into with a Prospective Client, the Developer refunds such Prospective Client, in whole or in part, any amount of an investment that triggered payment of the Fees, the Introducer shall reimburse the Developer, on a proportional basis, the Fees previously paid.</p>
-    <p>6.5. The Fees constitute full and final compensation for the Introducer's services. The Introducer shall not claim any additional fees, bonuses, or commissions.</p>
-    <p>6.6. Each Party shall bear its own operational and administrative expenses unless otherwise agreed in writing.</p>
-    <p>6.7. Fees are payable only under an executed Schedule.</p>
-
-    <p><strong>7. Liability and Indemnification</strong></p>
-    <p>7.1. Each Party (the "Indemnifying Party") shall indemnify and hold harmless the other Party (the "Indemnified Party") and its affiliates, officers, directors, employees, and representatives from any losses, claims, or expenses arising from a breach or wrongful act of the Indemnifying Party.</p>
-    <p>7.2. The Introducer shall not be liable for materials, statements, or information supplied by the Developer, nor for any act or claim by a Prospective Client against the Developer.</p>
-    <p>7.3. Neither Party shall be liable for indirect, consequential, or punitive damages, including loss of profit or business opportunity.</p>
-
-    <p><strong>8. Confidentiality and Data Protection</strong></p>
-    <p>8.1. The Parties agree, during the validity of this Agreement and after its termination, to maintain strict confidentiality with respect to all Confidential Information, proprietary information, trade secrets, documents, materials, data, know-how, and any other non-public information disclosed in connection with this Agreement.</p>
-    <p>8.2. The Parties acknowledge that any breach of this Clause may cause irreparable harm, for which monetary damages may be insufficient.</p>
-    <p>8.3. Each Party shall process any Personal Data in accordance with Regulation (EU) 2016/679 ("GDPR"), where applicable, and any other applicable data protection laws.</p>
-    <p>8.5. The Introducer hereby warrants that it has obtained all necessary consent from the Prospective Clients to share their data with the Developer or any company from the Developer's group.</p>
-    <p>8.6. All documents, data, designs, materials, methodologies, know-how, intellectual property rights, and other proprietary information disclosed or made available by the Developer to the Introducer in connection with this Agreement shall remain the sole and exclusive property of the Developer.</p>
-
-    <p><strong>9. Non-Solicitation</strong></p>
-    <p>9.1. During the term of this Agreement and for 90 days thereafter, neither Party shall, without prior written consent, directly or indirectly solicit or hire any employee, consultant, or contractor of the other Party.</p>
-
-    <p><strong>10. Force Majeure</strong></p>
-    <p>10.1. Neither Party shall be liable for delay or failure to perform due to events beyond reasonable control, including acts of God, war, terrorism, civil unrest, natural disasters, pandemics, strikes, or government actions.</p>
-
-    <p><strong>11. Communications</strong></p>
-    <p>11.1. Unless otherwise stated, all notices or communications under this Agreement shall be sent to the addresses below or such others as duly notified:</p>
-    
-    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-        <div style="width: 45%;">
-            <strong>The Introducer:</strong><br>
-            PANGEEA REALTY 44 PVT. LTD.<br>
-            To the attention of: Ridhima Sabharwal<br>
-            Address: 14198 Block 14 Parking Floor Subhash Nagar, New Delhi, India 110027
-        </div>
-        <div style="width: 45%;">
-            <strong>The Developer:</strong><br>
-            {{ company_name }}<br>
-            To the attention of: {{ representative_name }}<br>
-            Address: {{ company_address }}
-        </div>
+    <div style="margin-top: 24px;">
+      <div class="sig-field">
+        <label for="sig-name">Printed Name (Signature)</label>
+        <input
+          type="text"
+          id="sig-name"
+          placeholder="Type your full name to sign"
+          style="
+            width: 300px;
+            border: none;
+            border-bottom: 1px solid hsl(var(--border, 0 0% 82%));
+            background: transparent;
+            font-size: 14px;
+            color: hsl(var(--foreground, 0 0% 5%));
+            padding: 4px 0;
+            outline: none;
+            display: block;
+            margin-top: 4px;
+          "
+        />
+        <p style="font-size: 11px; color: hsl(var(--muted-foreground, 0 0% 40%)); margin-top: 4px;">
+          Typing your name constitutes a digital signature.
+        </p>
+      </div>
     </div>
+  </div>
 
-    <p>11.2. Notices made in writing shall be deemed as served on the date of reception thereof, duly substantiated by proof of reception.</p>
-    <p>11.3. For notification in the context of a judicial procedure for the enforcement of cash obligations arising from this Agreement, the Parties elect the addresses indicated in the heading of the Agreement.</p>
-    <p>11.4. Any changes to the addresses indicated in the heading of the Agreement shall be notified to the other Party by registered letter with acknowledgment of receipt.</p>
+  <div class="footer-note">
+    {{ platform_name }} — Developer Onboarding Terms &amp; Conditions · Version {{ version }}
+  </div>
 
-    <p><strong>12. Miscellaneous</strong></p>
-    <p>12.1. No waiver of any breach shall operate as a waiver of subsequent breaches; rights and remedies under this Agreement are cumulative and not exclusive.</p>
-    <p>12.2. If any provision is held invalid or unenforceable, the remainder shall remain effective; the invalid term shall be replaced by one reflecting the Parties' original intent.</p>
-    <p>12.3. This Agreement constitutes the entire understanding between the Parties and supersedes all prior communications or agreements relating to its subject matter.</p>
-    <p>12.4. Any amendment to this Agreement must be in writing and signed by both Parties.</p>
-    <p>12.5. This Agreement takes effect upon signature by both Parties. Electronic (PDF) signatures exchanged by e-mail are valid and binding.</p>
-    <p>12.6. To the fullest extent permitted by applicable law, the Parties expressly waive the application of any mandatory or default legal regime governing commercial agency, commercial representation, intermediary, distributor, franchise, or similar relationships.</p>
-    <p>12.7. If, despite such waiver, any "client compensation" or similar payment becomes legally due, the Introducer shall reimburse the Developer an amount equal to any such compensation paid.</p>
-    <p>12.8. This Agreement may be executed in counterparts, each deemed an original, all forming a single instrument binding upon receipt of signed copies by both Parties.</p>
-    <p>12.9. The Parties hereto agree that they have specifically requested that this Agreement be drafted in the English language.</p>
-
-    <h3 style="margin-top: 30px; text-decoration: underline;">PART 3 - PARTICULAR CONDITIONS</h3>
-    <p><strong>14. Scope of the Particular Conditions</strong></p>
-    <p>14.1. Part 3 sets out the Program-specific parameters applicable to the cooperation between the Parties, including, where relevant, the identification of the applicable Program, the event constituting an Engagement, the event constituting completion of a Transaction, the Registration Period, and the applicable Fees.</p>
-    <p>14.2. The General Conditions set out in Part 2 shall apply uniformly and in full to all Programs. The Particular Conditions do not create separate or independent contractual regimes and operate solely as supplements specifying Program-specific variables.</p>
-    <p>14.3. The Particular Conditions shall apply exclusively to the Program(s) expressly identified therein and shall not modify, limit, or override the General Conditions, except to the extent strictly necessary to give effect to the specific parameters of the relevant Program.</p>
-    <p>14.4. In the event of any inconsistency between the General Conditions and the Particular Conditions, the General Conditions shall prevail, save solely in respect of (i) the applicable Program, (ii) the Engagement trigger, (iii) the Transaction completion trigger, (iv) the Registration Period and any Program-specific effectiveness rules, and (v) the Fees, in each case as expressly set out in the relevant Schedule.</p>
-    <p>14.5. For the purposes of this Agreement, a Program shall only be deemed applicable where the Parties have duly executed the corresponding Schedule or Particular Conditions relating to that Program.</p>
-
-    <p><strong>15. Schedules</strong></p>
-    <p>15.1. Each Schedule executed by the Parties under this Part 3 (and any annex, addendum, or supplemental schedule agreed in writing) is incorporated by reference and forms an integral and binding part of this Agreement.</p>
-    <p>15.2. No Schedule shall be effective unless duly executed by both Parties (or their duly authorized representatives), and only upon such execution shall it create rights or obligations in respect of the relevant Program.</p>
-    <p>15.3. Any reference in this Agreement to the "Agreement" includes its Schedules.</p>
-
-    <p style="margin-top: 40px;"><em>Both parties acknowledge that they have read, understood, and agreed to all sections of this Agreement and the parties hereto have signed on the date and the place hereinafter set forth.</em></p>
-
-    <div style="display: flex; justify-content: space-between; margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px;">
-        <div style="width: 45%;">
-            <p><strong>The Introducer</strong></p>
-            <p style="text-transform: uppercase;">PANGEEA REALTY 44 PVT. LTD.</p>
-            <p>Name: Ridhima Sabharwal</p>
-            <p>Capacity: Director</p>
-        </div>
-        <div style="width: 45%;">
-            <p><strong>The Developer</strong></p>
-            <p style="text-transform: uppercase;">{{ company_name }}</p>
-            <p>Name: {{ representative_name }}</p>
-            <p>Capacity: Authorized Representative</p>
-        </div>
-    </div>
-
-</div>
+</body>
+</html>

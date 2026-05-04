@@ -27,6 +27,26 @@ def require_storage_env() -> None:
         raise HTTPException(status_code=500, detail="Missing S3 storage environment variables.")
 
 
+ALLOWED_PROJECT_TYPE_ENUM_VALUES = {"Residential", "Commercial", "Mixed-use"}
+
+PROJECT_TYPE_ENUM_MAP: dict[str, str] = {
+    "Apartments": "Residential",
+    "Townhouses": "Residential",
+    "Community Living": "Residential",
+    "Villas": "Residential",
+    "Plots/Land": "Residential",
+    "Mixed-Use": "Mixed-use",
+}
+
+
+def coerce_project_type(value: Optional[str]) -> Optional[str]:
+    if not value:
+        return None
+    if value in ALLOWED_PROJECT_TYPE_ENUM_VALUES:
+        return value
+    return PROJECT_TYPE_ENUM_MAP.get(value)
+
+
 def get_s3_client():
     require_storage_env()
     return boto3.client(
@@ -166,6 +186,11 @@ def submit_profile(payload: ProfileSubmitRequest, user=Depends(verify_bearer_tok
         "number_of_investors": payload.company.numberOfInvestors or None,
         "repeat_buyers_percent": payload.company.repeatBuyers or None,
         "buyer_types": payload.company.buyerTypes,
+        "rep_name": payload.company.repName or None,
+        "rep_personal_email": payload.company.repPersonalEmail or None,
+        "rep_official_email": payload.company.repOfficialEmail or None,
+        "rep_years_active": int(payload.company.repYearsActive) if payload.company.repYearsActive and payload.company.repYearsActive.isdigit() else None,
+        "rep_designation": payload.company.repDesignation or None,
         "registration_cert_url": get_meta_value(company_documents.get("registrationCertificate"), "url"),
         "project_portfolio_url": get_meta_value(company_documents.get("projectPortfolio"), "url"),
         "financial_statements_url": get_meta_value(company_documents.get("financialStatements"), "url"),
@@ -180,9 +205,17 @@ def submit_profile(payload: ProfileSubmitRequest, user=Depends(verify_bearer_tok
         # If profile exists, UPDATE it using its specific ID
         profile_id = existing_data[0]["id"]
         result = supabase.table("developers").update(row).eq("id", profile_id).execute()
+        result_error = getattr(result, "error", None)
+        if result_error and "rep_designation" in str(result_error):
+            row.pop("rep_designation", None)
+            result = supabase.table("developers").update(row).eq("id", profile_id).execute()
     else:
         # If no profile exists, INSERT a new one
         result = supabase.table("developers").insert(row).execute()
+        result_error = getattr(result, "error", None)
+        if result_error and "rep_designation" in str(result_error):
+            row.pop("rep_designation", None)
+            result = supabase.table("developers").insert(row).execute()
 
     result_data = getattr(result, "data", [])
     if not result_data:
@@ -207,17 +240,13 @@ def submit_project(payload: ProjectSubmitRequest, user=Depends(verify_bearer_tok
     project_assets = payload.uploads.projectAssets or {}
     incoming_images = project_assets.get("projectImages") or payload.project.projectImages or []
 
-    foreign_inv_allowed = None
-    if payload.project.foreignInvestmentAllowed:
-        foreign_inv_allowed = str(payload.project.foreignInvestmentAllowed).lower() in ['true', '1', 't', 'y', 'yes']
-
     row = {
         "developer_id": dev_id,
         "project_name": payload.project.projectName,
         "country": payload.project.country,
         "city": payload.project.city,
         "micro_location": payload.project.microLocation,
-        "project_type": payload.project.projectType or None,
+        "project_type": coerce_project_type(payload.project.projectType),
         "project_stage": payload.project.projectStage or None,
         "distance_to_airport_km": payload.project.distanceToAirport or None,
         "distance_to_business_district_km": payload.project.distanceToBusinessDistrict or None,
@@ -230,7 +259,7 @@ def submit_project(payload: ProjectSubmitRequest, user=Depends(verify_bearer_tok
         "price_positioning": payload.project.pricePositioning or None,
         "expected_annual_returns_percent": payload.project.expectedAnnualReturns or None,
         "rental_yield_estimate_percent": payload.project.rentalYieldEstimate or None,
-        "foreign_investment_allowed": foreign_inv_allowed,
+        "foreign_investment_allowed": payload.project.foreignInvestmentAllowed or None,
         "ownership_structure": payload.project.ownershipStructure or None,
         "golden_visa_linked": payload.project.goldenVisa,
         "tax_considerations": payload.project.taxConsiderations or None,
@@ -238,7 +267,18 @@ def submit_project(payload: ProjectSubmitRequest, user=Depends(verify_bearer_tok
         "expected_completion_date": payload.project.expectedCompletionDate or None,
         "total_units": payload.project.totalUnits or None,
         "units_available": payload.project.unitsAvailable or None,
+        "unit_types": {
+            item.get("name"): item.get("count")
+            for item in (payload.project.unitTypes or [])
+            if isinstance(item, dict) and item.get("name")
+        },
         "developer_track_record": payload.project.developerTrackRecord or None,
+        "property_description": payload.project.propertyDescription or None,
+        "property_tags": payload.project.propertyTags if payload.project.propertyTags else None,
+        "project_address": payload.project.projectAddress or None,
+        "google_map_link": payload.project.googleMapLink or None,
+        "total_floors": int(payload.project.totalFloors) if payload.project.totalFloors and payload.project.totalFloors.isdigit() else None,
+        "unit_typology": payload.project.unitTypology if payload.project.unitTypology else None,
         "project_images": [get_meta_value(item, "url") for item in incoming_images if get_meta_value(item, "url")] or None,
         "floor_plans_url": get_meta_value(project_assets.get("floorPlans") or payload.project.floorPlans, "url"),
         "brochure_url": get_meta_value(project_assets.get("brochure") or payload.project.brochure, "url"),
@@ -252,14 +292,34 @@ def submit_project(payload: ProjectSubmitRequest, user=Depends(verify_bearer_tok
             .eq("developer_id", dev_id)
             .execute()
         )
+        result_error = getattr(result, "error", None)
+        if result_error and "foreign_investment_allowed" in str(result_error):
+            row.pop("foreign_investment_allowed", None)
+            result = (
+                supabase.table("projects")
+                .update(row)
+                .eq("id", payload.project_id)
+                .eq("developer_id", dev_id)
+                .execute()
+            )
+            result_error = getattr(result, "error", None)
         result_data = getattr(result, "data", [])
+        if result_error:
+            raise HTTPException(status_code=500, detail=f"Failed to update project: {result_error}")
         if not result_data:
             raise HTTPException(status_code=404, detail="Project not found for this user.")
         saved_id = result_data[0]["id"]
     else:
         row["id"] = str(uuid.uuid4())
         result = supabase.table("projects").insert(row).execute()
+        result_error = getattr(result, "error", None)
+        if result_error and "foreign_investment_allowed" in str(result_error):
+            row.pop("foreign_investment_allowed", None)
+            result = supabase.table("projects").insert(row).execute()
+            result_error = getattr(result, "error", None)
         result_data = getattr(result, "data", [])
+        if result_error:
+            raise HTTPException(status_code=500, detail=f"Failed to create project: {result_error}")
         if not result_data:
             raise HTTPException(status_code=500, detail="Failed to create project.")
         saved_id = result_data[0]["id"]

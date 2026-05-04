@@ -8,6 +8,7 @@
 venv/
 .venv/
 env/
+.env
 
 # Environment variables (secrets)
 
@@ -32,6 +33,14 @@ build/
 
 .vscode/
 .idea/
+
+
+#add the docker file later -- prod level
+Dockerfile
+
+#mics
+*repomix*.md
+test*.py
 
 
 

@@ -5,6 +5,8 @@ class CompanyDetails(BaseModel):
     company_address: str
     representative_name: str
     registration_number: str
+    designation: str = ""
+    date: str = ""
 
 
     
