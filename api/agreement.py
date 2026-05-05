@@ -69,14 +69,15 @@ def send_email_background_task(emails: List[str], pdf_bytes: bytes):
         # Automatically handle port 465 (SSL) vs 587 (TLS)
         if smtp_port == 465:
             print("--> [DEBUG 5] Connecting via SMTP_SSL (Port 465)...", flush=True)
-            with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+            # Added timeout=10 so it fails and prints an error instead of hanging forever!
+            with smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=10) as server:
                 print("--> [DEBUG 6] Connected to SSL server. Logging in...", flush=True)
                 server.login(sender_email, sender_password)
                 print("--> [DEBUG 7] Logged in successfully! Sending message...", flush=True)
                 server.send_message(msg)
         else:
             print(f"--> [DEBUG 5] Connecting via standard SMTP (Port {smtp_port})...", flush=True)
-            with smtplib.SMTP(smtp_server, smtp_port) as server:
+            with smtplib.SMTP(smtp_server, smtp_port, timeout=10) as server:
                 print("--> [DEBUG 6] Connected to standard server. Initiating STARTTLS...", flush=True)
                 server.starttls()
                 print("--> [DEBUG 7] TLS secured. Logging in...", flush=True)
