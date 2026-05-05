@@ -11,6 +11,7 @@ from email.message import EmailMessage
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from dotenv import load_dotenv
 import time
+import traceback
 
 load_dotenv()
 
@@ -30,16 +31,27 @@ import os
 import sys
 
 def send_email_background_task(emails: List[str], pdf_bytes: bytes):
+    print(f"--> [DEBUG 1] Background task actually started for emails: {emails}", flush=True)
     try:
         sender_email = os.getenv("SMTP_USER")
         sender_password = os.getenv("SMTP_PASSWORD")
         smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-        smtp_port = int(os.getenv("SMTP_PORT", 587))
+        
+        # Safely parse the port to avoid silent crashes if Render parses it as a string with spaces
+        raw_port = os.getenv("SMTP_PORT", 587)
+        try:
+            smtp_port = int(raw_port)
+        except ValueError:
+            print(f"--> [ERROR] Invalid SMTP_PORT value: '{raw_port}'. Defaulting to 587", flush=True)
+            smtp_port = 587
+
+        print(f"--> [DEBUG 2] Loaded ENV Vars - USER: {sender_email}, SERVER: {smtp_server}, PORT: {smtp_port}, HAS_PASSWORD: {bool(sender_password)}", flush=True)
 
         if not sender_email or not sender_password:
-            print("Background Task Email Error: SMTP credentials are not configured.", flush=True)
+            print("--> [FATAL ERROR] SMTP credentials are not configured or missing.", flush=True)
             return
 
+        print("--> [DEBUG 3] Building email message...", flush=True)
         msg = EmailMessage()
         msg['Subject'] = "Your Pangaea Developer Agreement"
         msg['From'] = sender_email
@@ -52,23 +64,34 @@ def send_email_background_task(emails: List[str], pdf_bytes: bytes):
         )
 
         msg.add_attachment(pdf_bytes, maintype='application', subtype='pdf', filename='Pangaea_Agreement.pdf')
+        print(f"--> [DEBUG 4] Message built. PDF size: {len(pdf_bytes)} bytes. Attempting SMTP connection...", flush=True)
 
         # Automatically handle port 465 (SSL) vs 587 (TLS)
         if smtp_port == 465:
+            print("--> [DEBUG 5] Connecting via SMTP_SSL (Port 465)...", flush=True)
             with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+                print("--> [DEBUG 6] Connected to SSL server. Logging in...", flush=True)
                 server.login(sender_email, sender_password)
+                print("--> [DEBUG 7] Logged in successfully! Sending message...", flush=True)
                 server.send_message(msg)
         else:
+            print(f"--> [DEBUG 5] Connecting via standard SMTP (Port {smtp_port})...", flush=True)
             with smtplib.SMTP(smtp_server, smtp_port) as server:
+                print("--> [DEBUG 6] Connected to standard server. Initiating STARTTLS...", flush=True)
                 server.starttls()
+                print("--> [DEBUG 7] TLS secured. Logging in...", flush=True)
                 server.login(sender_email, sender_password)
+                print("--> [DEBUG 8] Logged in successfully! Sending message...", flush=True)
                 server.send_message(msg)
             
-        print(f"Background task: Email successfully sent to {emails}", flush=True)
+        print(f"--> [SUCCESS] Email successfully sent to {emails}!", flush=True)
         
     except Exception as e:
         # flush=True forces the error to show up immediately in Render's log stream
-        print(f"Background Task Email Error: {e}", flush=True)
+        print(f"--> [EXCEPTION CAUGHT] Background Task Failed: {e}", flush=True)
+        # This will print the EXACT line number that crashed
+        traceback.print_exc() 
+        sys.stdout.flush()
 
 @router.post("/send-agreement-email")
 async def send_agreement_email(request: EmailAgreementRequest, background_tasks: BackgroundTasks):
