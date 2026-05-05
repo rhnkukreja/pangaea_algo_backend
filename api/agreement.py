@@ -24,19 +24,22 @@ class EmailAgreementRequest(BaseModel):
     pdf_base64: str
 
 # Helper function that runs in the background
+import smtplib
+from email.message import EmailMessage
+import os
+import sys
+
 def send_email_background_task(emails: List[str], pdf_bytes: bytes):
     try:
-        # Get SMTP credentials from environment variables
         sender_email = os.getenv("SMTP_USER")
         sender_password = os.getenv("SMTP_PASSWORD")
         smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
         smtp_port = int(os.getenv("SMTP_PORT", 587))
 
         if not sender_email or not sender_password:
-            print("Email Error: SMTP credentials are not configured on the server.")
+            print("Background Task Email Error: SMTP credentials are not configured.", flush=True)
             return
 
-        # Create the email message
         msg = EmailMessage()
         msg['Subject'] = "Your Pangaea Developer Agreement"
         msg['From'] = sender_email
@@ -48,19 +51,24 @@ def send_email_background_task(emails: List[str], pdf_bytes: bytes):
             "The Pangaea Advisory Team"
         )
 
-        # Attach the PDF
         msg.add_attachment(pdf_bytes, maintype='application', subtype='pdf', filename='Pangaea_Agreement.pdf')
 
-        # Send the email
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()  # Secure the connection
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
+        # Automatically handle port 465 (SSL) vs 587 (TLS)
+        if smtp_port == 465:
+            with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+                server.login(sender_email, sender_password)
+                server.send_message(msg)
+        else:
+            with smtplib.SMTP(smtp_server, smtp_port) as server:
+                server.starttls()
+                server.login(sender_email, sender_password)
+                server.send_message(msg)
             
-        print(f"Background task: Email successfully sent to {emails}")
+        print(f"Background task: Email successfully sent to {emails}", flush=True)
         
     except Exception as e:
-        print(f"Background Task Email Error: {e}")
+        # flush=True forces the error to show up immediately in Render's log stream
+        print(f"Background Task Email Error: {e}", flush=True)
 
 @router.post("/send-agreement-email")
 async def send_agreement_email(request: EmailAgreementRequest, background_tasks: BackgroundTasks):
