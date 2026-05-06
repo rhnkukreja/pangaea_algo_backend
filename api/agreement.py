@@ -50,6 +50,15 @@ def send_email_background_task(emails: List[str], pdf_bytes: bytes):
         msg.add_attachment(pdf_bytes, maintype='application', subtype='pdf', filename='Pangaea_Agreement.pdf')
 
         # Send the email
+        import socket
+        try:
+            sock = socket.create_connection((smtp_server, smtp_port), timeout=10)
+            sock.close()
+            print(f"DEBUG: Port {smtp_port} is reachable on {smtp_server}", flush=True)
+        except Exception as sock_err:
+            print(f"DEBUG: Port {smtp_port} is BLOCKED: {repr(sock_err)}", flush=True)
+            return
+
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
             server.login(sender_email, sender_password)
