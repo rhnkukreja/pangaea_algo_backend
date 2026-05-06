@@ -5,3 +5,5 @@ jinja2
 supabase==2.28.3
 python-dotenv
 boto3
+requests
+python-dotenv

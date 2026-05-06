@@ -1,15 +1,18 @@
 from datetime import date as _date
-from fastapi import APIRouter
 from fastapi.templating import Jinja2Templates
 from schemas.company import CompanyDetails
 from pydantic import BaseModel
 from typing import List
 import os
 import base64
-import smtplib
-from email.message import EmailMessage
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 import time
+import traceback
+import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 router = APIRouter()
 
@@ -18,58 +21,54 @@ templates = Jinja2Templates(directory="templates")
 
 class EmailAgreementRequest(BaseModel):
     emails: List[str]
-    pdf_base64: str
+    pdf_url: str
 
 # Helper function that runs in the background
-def send_email_background_task(emails: List[str], pdf_bytes: bytes):
+# Helper function that runs in the background
+def send_email_background_task(emails: List[str], pdf_url: str):
+    print(f"--> [DEBUG] Starting Brevo API email task for: {emails}", flush=True)
     try:
-        # Get SMTP credentials from environment variables
-        sender_email = os.getenv("SMTP_USER")
-        sender_password = os.getenv("SMTP_PASSWORD")
-        smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-        smtp_port = int(os.getenv("SMTP_PORT", 587))
-        print(f"DEBUG SMTP: server={smtp_server}, port={smtp_port}, user={sender_email}", flush=True)
+        # Get credentials from environment
+        api_key = os.getenv("BREVO_API_KEY")
+        sender_email = os.getenv("SMTP_USER") # Ensure this is your verified Gmail address!
 
-        if not sender_email or not sender_password:
-            print("Email Error: SMTP credentials are not configured on the server.")
+        print(f"--> [DEBUG] SENDER EMAIL LOADED FROM ENV: '{sender_email}'", flush=True)
+
+        if not api_key or not sender_email:
+            print("--> [ERROR] BREVO_API_KEY or SMTP_USER is missing from environment variables.", flush=True)
             return
 
-        # Create the email message
-        msg = EmailMessage()
-        msg['Subject'] = "Your Pangaea Developer Agreement"
-        msg['From'] = sender_email
-        msg['To'] = ", ".join(emails)
-        msg.set_content(
-            "Hello,\n\n"
-            "Please find attached your generated Pangaea Developer Agreement.\n\n"
-            "Best regards,\n"
-            "The Pangaea Advisory Team"
-        )
+        # Build the headers Brevo expects
+        headers = {
+            "accept": "application/json",
+            "api-key": api_key,
+            "content-type": "application/json"
+        }
 
-        # Attach the PDF
-        msg.add_attachment(pdf_bytes, maintype='application', subtype='pdf', filename='Pangaea_Agreement.pdf')
+        # Format the recipient list for Brevo: [{"email": "user1@example.com"}, ...]
+        to_list = [{"email": email} for email in emails]
 
-        # Send the email
-        import socket
-        try:
-            sock = socket.create_connection((smtp_server, smtp_port), timeout=10)
-            sock.close()
-            print(f"DEBUG: Port {smtp_port} is reachable on {smtp_server}", flush=True)
-        except Exception as sock_err:
-            print(f"DEBUG: Port {smtp_port} is BLOCKED: {repr(sock_err)}", flush=True)
-            return
+        # Build the email payload
+        payload = {
+            "sender": {"name": "Pangaea Advisory Team", "email": sender_email},
+            "to": to_list,
+            "subject": "Your Pangaea Developer Agreement",
+            "htmlContent": f"<p>Hello,</p><p>Your Pangaea Developer Agreement is ready.</p><p><a href='{pdf_url}'>Click here to download your agreement PDF</a></p><p>Best regards,<br>The Pangaea Advisory Team</p>"
+        }
 
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
-            
-        print(f"Background task: Email successfully sent to {emails}")
-        
+        # Fire the HTTP request (Port 443 - Bypasses Render Firewall completely!)
+        print("--> [DEBUG] Sending request to Brevo...", flush=True)
+        response = requests.post("https://api.brevo.com/v3/smtp/email", headers=headers, json=payload)
+
+        # Check if it worked
+        if response.status_code in [200, 201, 202]:
+            print(f"--> [SUCCESS] Email sent successfully via Brevo! Response: {response.json()}", flush=True)
+        else:
+            print(f"--> [BREVO API ERROR] Status: {response.status_code}, Details: {response.text}", flush=True)
+
     except Exception as e:
-        import traceback
+        print(f"--> [EXCEPTION CAUGHT] API Email Failed: {e}", flush=True)
         traceback.print_exc()
-        print(f"Background Task Email Error (full): {repr(e)}", flush=True)
 
 @router.post("/send-agreement-email")
 async def send_agreement_email(request: EmailAgreementRequest, background_tasks: BackgroundTasks):
@@ -78,18 +77,10 @@ async def send_agreement_email(request: EmailAgreementRequest, background_tasks:
     
     try:
         t1 = time.time()
-        # 1. Decode the base64 PDF (This is extremely fast, takes milliseconds)
-        if "," in request.pdf_base64:
-            _, encoded_data = request.pdf_base64.split(",", 1)
-        else:
-            encoded_data = request.pdf_base64
-            
-        pdf_bytes = base64.b64decode(encoded_data)
         
-        # 2. Hand off the heavy 10-second SMTP work to a background thread
-        background_tasks.add_task(send_email_background_task, request.emails, pdf_bytes)
+        background_tasks.add_task(send_email_background_task, request.emails, request.pdf_url)
 
-        # 3. Return immediately to the frontend!
+        # Return immediately to the frontend
         t2 = time.time()
         t3 = t2 - t1
         print(f"time taken to send the email is {t3}.")
