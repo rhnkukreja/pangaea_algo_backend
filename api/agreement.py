@@ -21,18 +21,18 @@ templates = Jinja2Templates(directory="templates")
 
 class EmailAgreementRequest(BaseModel):
     emails: List[str]
-    pdf_url: str
+    pdf_base64: str
 
 # Helper function that runs in the background
-# Helper function that runs in the background
-def send_email_background_task(emails: List[str], pdf_url: str):
+def send_email_background_task(emails: List[str], pdf_base64: str):
     print(f"--> [DEBUG] Starting Brevo API email task for: {emails}", flush=True)
     try:
         # Get credentials from environment
         api_key = os.getenv("BREVO_API_KEY")
         sender_email = os.getenv("SMTP_USER") # Ensure this is your verified Gmail address!
 
-        print(f"--> [DEBUG] SENDER EMAIL LOADED FROM ENV: '{sender_email}'", flush=True)
+        # The frontend sends "data:application/pdf;base64,JVBE...", Brevo ONLY wants the "JVBE..." part
+        clean_b64 = pdf_base64.split("base64,")[1] if "base64," in pdf_base64 else pdf_base64
 
         if not api_key or not sender_email:
             print("--> [ERROR] BREVO_API_KEY or SMTP_USER is missing from environment variables.", flush=True)
@@ -53,7 +53,13 @@ def send_email_background_task(emails: List[str], pdf_url: str):
             "sender": {"name": "Pangaea Advisory Team", "email": sender_email},
             "to": to_list,
             "subject": "Your Pangaea Developer Agreement",
-            "htmlContent": f"<p>Hello,</p><p>Your Pangaea Developer Agreement is ready.</p><p><a href='{pdf_url}'>Click here to download your agreement PDF</a></p><p>Best regards,<br>The Pangaea Advisory Team</p>"
+            "htmlContent": "<p>Hello,</p><p>Please find attached your generated Pangaea Developer Agreement.</p><p>Best regards,<br>The Pangaea Advisory Team</p>",
+            "attachment": [
+                {
+                    "content": clean_b64,
+                    "name": "Pangaea_Developer_Agreement.pdf"
+                }
+            ]
         }
 
         # Fire the HTTP request (Port 443 - Bypasses Render Firewall completely!)
@@ -78,7 +84,7 @@ async def send_agreement_email(request: EmailAgreementRequest, background_tasks:
     try:
         t1 = time.time()
         
-        background_tasks.add_task(send_email_background_task, request.emails, request.pdf_url)
+        background_tasks.add_task(send_email_background_task, request.emails, request.pdf_base64)
 
         # Return immediately to the frontend
         t2 = time.time()
