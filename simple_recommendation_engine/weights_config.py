@@ -28,49 +28,40 @@ COUNTRY_BASELINE_WEIGHTS = {
 
 # ─── COUNTRY TIER 1 — Primary Objective (max ±15) ─────────
 COUNTRY_TIER1_SHIFTS = {
-    "capital_appreciation": {
-        "foreign_buyer_market_share": +10,
-        "interest_rate_direction": +5,
+     "capital_appreciation": {
+        "foreign_buyer_market_share": 10,
+        "interest_rate_direction": 5,
         "political_stability_index": -10,
-        "corruption_perception_index": -5
+        "corruption_perception_index": -5,
     },
+
     "yield_cash_flow": {
-        "property_taxation_for_foreigners": +8,
-        "currency_volatility": +7,
+        "property_taxation_for_foreigners": 8,
+        "currency_volatility": 7,
         "political_stability_index": -10,
-        "foreign_buyer_market_share": -5
+        "foreign_buyer_market_share": -5,
     },
-    "capital_preservation": {
-        "political_stability_index": +8,
-        "currency_volatility": +7,
-        "foreign_buyer_market_share": -10,
-        "interest_rate_direction": -5
-    },
-    "investment_diversification": {
-        "political_stability_index": +5,
-        "currency_volatility": +5,
-        "foreign_buyer_market_share": +5,
-        "interest_rate_direction": -10,
-        "corruption_perception_index": -5
-    },
+
+   "capital_preservation": {
+    "political_stability_index": 5,
+    "currency_volatility": 5,
+    "foreign_buyer_market_share": -5,
+    "interest_rate_direction": -10,
+},
+
+"investment_diversification": {
+    "political_stability_index": 5,
+    "currency_volatility": 5,
+    "foreign_buyer_market_share": -5,
+    "interest_rate_direction": -10,
+},
+
     "residency_citizenship": {
-        "political_stability_index": +10,
-        "corruption_perception_index": +5,
+        "political_stability_index": 10,
+        "corruption_perception_index": 5,
         "property_taxation_for_foreigners": -10,
-        "currency_volatility": -5
+        "currency_volatility": -5,
     },
-    "roi": {
-        "foreign_buyer_market_share": +10,
-        "interest_rate_direction": +5,
-        "political_stability_index": -10,
-        "corruption_perception_index": -5
-    },
-    "golden_visa": {
-        "political_stability_index": +10,
-        "corruption_perception_index": +5,
-        "property_taxation_for_foreigners": -10,
-        "currency_volatility": -5
-    }
 }
 
 # ─── COUNTRY TIER 2 — Risk Appetite (max ±10) ─────────────

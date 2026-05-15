@@ -18,31 +18,7 @@ if "surviving_countries" not in st.session_state:
     st.session_state.surviving_countries = []
 
 PERSONAS = {
-    "Citizenship Seeker": {
-        "primary_objective": "citizenship",
-        "visa_required": "mandatory",
-        "citizenship_required": "yes",
-        "budget_usd": 1500000,
-        "risk_appetite": "moderate",
-        "ownership_structure": "freehold_only",
-    },
-    "Golden Visa Seeker": {
-        "primary_objective": "golden_visa",
-        "visa_required": "mandatory",
-        "citizenship_required": "no",
-        "budget_usd": 800000,
-        "risk_appetite": "moderate",
-        "ownership_structure": "freehold_only",
-    },
-    "Rental Yield Investor": {
-        "primary_objective": "rental_yield",
-        "visa_required": "optional",
-        "citizenship_required": "no",
-        "budget_usd": 600000,
-        "risk_appetite": "opportunistic",
-        "ownership_structure": "any",
-    },
-    "Capital Appreciation Investor": {
+    "Capital Appreciation": {
         "primary_objective": "capital_appreciation",
         "visa_required": "optional",
         "citizenship_required": "no",
@@ -50,14 +26,43 @@ PERSONAS = {
         "risk_appetite": "moderate",
         "ownership_structure": "any",
     },
-    "Vacation Home Investor": {
-        "primary_objective": "vacation_home",
+
+    "Yield / Cash Flow": {
+        "primary_objective": "yield_cash_flow",
         "visa_required": "optional",
         "citizenship_required": "no",
-        "budget_usd": 700000,
+        "budget_usd": 600000,
+        "risk_appetite": "opportunistic",
+        "ownership_structure": "any",
+    },
+
+    "Capital Preservation": {
+        "primary_objective": "capital_preservation",
+        "visa_required": "optional",
+        "citizenship_required": "no",
+        "budget_usd": 1500000,
         "risk_appetite": "conservative",
         "ownership_structure": "freehold_only",
     },
+
+    "Investment Diversification": {
+        "primary_objective": "investment_diversification",
+        "visa_required": "optional",
+        "citizenship_required": "no",
+        "budget_usd": 1200000,
+        "risk_appetite": "moderate",
+        "ownership_structure": "any",
+    },
+
+    "Residency / Citizenship": {
+        "primary_objective": "residency_citizenship",
+        "visa_required": "mandatory",
+        "citizenship_required": "yes",
+        "budget_usd": 1500000,
+        "risk_appetite": "moderate",
+        "ownership_structure": "freehold_only",
+    },
+
     "Custom": None,
 }
 
@@ -85,10 +90,12 @@ with col_form:
     st.subheader("Investor Profile")
 
     primary_objective = st.selectbox(
-        "Q1 — Primary Investment Objective",
-        ["capital_appreciation", "rental_yield", "citizenship", "golden_visa", "vacation_home"],
-        key="country_primary_objective",
-    )
+    "Q1 — Primary Investment Objective",
+    [
+        "capital_appreciation", "yield_cash_flow", "capital_preservation",  "investment_diversification", "residency_citizenship",
+    ],
+    key="country_primary_objective",
+)
 
     visa_required = st.radio(
         "Q2 — Visa / Residency Requirement",
